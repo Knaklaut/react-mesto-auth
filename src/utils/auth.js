@@ -1,62 +1,45 @@
-class Auth {
-    constructor({ baseUrl, headers }) {
-        this._headers = headers;
-        this._baseUrl = baseUrl
-    }
+export const BASE_URL = 'https://auth.nomoreparties.co';
 
-    _checkServerData(res) {
-        if (res.ok) {
-            return res.json();
-        }
-        return Promise.reject(res.status);
+function checkServerData(res) {
+    if (res.ok) {
+        return res.json();
     }
-
-    register(email, password) {
-        return fetch (`${this._baseUrl}/signup`, {
-            method: 'POST',
-            headers: this._headers,
-            body: JSON.stringify({
-                email, password
-            })
-        })
-        .then(this._checkServerData);
-    }
-
-    login(email, password) {
-        return fetch (`${this._baseUrl}/signin`, {
-            method: 'POST',
-            headers: this._headers,
-            body: JSON.stringify({
-                email, password
-            })
-        })
-        .then(this._checkServerData)
-        .then(res => {
-            if (res.token) {
-                localStorage.setItem('jwt', res.token);
-                return res;
-            }
-        });
-    }
-
-    checkToken(token) {
-        return fetch (`${this._baseUrl}/users/me`, {
-            method: 'GET',
-            headers: {
-                ...this._headers,
-                'Authorization': `Bearer ${token}`
-            }
-        })
-        .then(this._checkServerData)
-        .then(res => res.data);
-    }
+    return Promise.reject(res.status);
 }
 
-const auth = new Auth({
-    baseUrl: 'https://auth.nomoreparties.co',
-    headers: {
-        'Content-Type': 'application/json'
-    }
-});
+export function register(email, password) {
+    return fetch (`${BASE_URL}/signup`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            email, password
+        })
+    })
+    .then(checkServerData);
+}
 
-export default auth;
+export function login(email, password) {
+    return fetch (`${BASE_URL}/signin`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+            body: JSON.stringify({
+                email, password
+            })
+        })
+        .then(checkServerData);
+    }
+
+export function checkToken(token) {
+    return fetch (`${BASE_URL}/users/me`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+        }
+    })
+    .then(checkServerData);
+}
