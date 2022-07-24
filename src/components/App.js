@@ -110,8 +110,8 @@ function App() {
 
   function handleUserRegister(email, password) {
     auth.register(email, password)
-    .then((res) => {
-      if (res) {
+    .then((data) => {
+      if (data) {
         handleInfoTooltip(true);
         history.push('/sign-in');
       }
@@ -124,11 +124,11 @@ function App() {
 
   function handleUserLogin(email, password) {
     auth.login(email, password)
-      .then((res) => {
-      if (res.token) {
+      .then((data) => {
+      if (data.token) {
         setEmail(email);
         handleUserLogged();
-        localStorage.setItem('jwt', res.token);
+        localStorage.setItem('token', data.token);
         history.push('/');
       }
     })
