@@ -110,8 +110,8 @@ function App() {
 
   function handleUserRegister(email, password) {
     auth.register(email, password)
-    .then((data) => {
-      if (data) {
+    .then((res) => {
+      if (res) {
         handleInfoTooltip(true);
         history.push('/sign-in');
       }
@@ -124,11 +124,11 @@ function App() {
 
   function handleUserLogin(email, password) {
     auth.login(email, password)
-      .then((data) => {
-      if (data.token) {
+      .then((res) => {
+      if (res.token) {
         setEmail(email);
         handleUserLogged();
-        localStorage.setItem('token', data.token);
+        localStorage.setItem('jwt', res.token);
         history.push('/');
       }
     })
@@ -237,8 +237,6 @@ function App() {
         <Route path="/sign-up">
           <Register onRegister={ handleUserRegister } />
         </Route>
-
-        <Route>{ userLogged ? (<Redirect to="/" />) : (<Redirect to="/sign-in" />) }</Route>
       </Switch>
       
       <Footer />
