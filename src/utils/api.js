@@ -69,12 +69,20 @@ class Api {
     .then(this._checkServerData);
   }
 
-  checkLikeStatus(cardId, isNotLiked) {
+  addLike(cardId) {
     return fetch(`${this._likesUrl}/${cardId}`, {
-      method: isNotLiked ? 'PUT' : 'DELETE',
+      method: 'PUT',
       headers: this._headers
     })
-    .then(this._checkServerData)
+    .then(this._checkServerData);
+  }
+
+  deleteLike(cardId) {
+    return fetch(`${this._likesUrl}/${cardId}`, {
+      method: 'DELETE',
+      headers: this._headers
+    })
+    .then(this._checkServerData);
   }
 
   deleteCard(cardId) {

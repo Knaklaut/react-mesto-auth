@@ -8,6 +8,7 @@ function checkServerData(res) {
 }
 
 export function register(email, password) {
+    console.log(email, password);
     return fetch (`${BASE_URL}/signup`, {
         method: 'POST',
         headers: {
@@ -21,6 +22,7 @@ export function register(email, password) {
 }
 
 export function login(email, password) {
+    console.log(email, password);
     return fetch (`${BASE_URL}/signin`, {
         method: 'POST',
         headers: {

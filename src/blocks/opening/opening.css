@@ -1,5 +1,5 @@
 .opening {
-    min-height: calc(100vh - 282px);
+    min-height: calc(100vh - 220px);
     display: flex;
     flex-direction: column;
     align-self: center;
@@ -7,12 +7,12 @@
 
 @media screen and (max-width: 890px) {
     .opening {
-        min-height: calc(100vh - 210px);
+        min-height: calc(100vh - 120px);
     }
 }
 
 @media screen and (max-width: 620px) {
     .opening {
-        min-height: calc(100vh - 170px);
+        min-height: calc(100vh - 190px);
     }
 }

@@ -18,7 +18,7 @@ import ImagePopup from './ImagePopup.js';
 import Footer from './Footer.js';
 
 function App() {
-  const [userLogged, setUserLogged] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState({});
   const [email, setEmail] = useState('');
   const history = useHistory();
@@ -43,16 +43,16 @@ function App() {
 
   useEffect(() => {
     api.getInitialCards()
-      .then((data) => {
+      .then(data => {
         setCards(data);
       })
-      .catch((err) => {
+      .catch(err => {
         console.log(err);
       })
   }, []);
 
   function handleUserLogged() {
-    setUserLogged(true);
+    setLoggedIn(true);
   }
 
   function handleInfoTooltip(outcome) {
@@ -89,7 +89,7 @@ function App() {
   }
 
   function handleOverlayClickClose(evt) {
-    if(evt.target.classList.contains('popup_opened')) {
+    if(evt.target.classList.contains('popup')) {
       closeAllPopups();
     }
   }
@@ -110,42 +110,50 @@ function App() {
 
   function handleUserRegister(email, password) {
     auth.register(email, password)
-    .then((data) => {
+    .then(data => {
       if (data) {
         handleInfoTooltip(true);
         history.push('/sign-in');
       }
     })
-    .catch((err) => {
+    .catch(err => {
       handleInfoTooltip(false);
       console.log(err);
-    })
+    });
   }
 
   function handleUserLogin(email, password) {
     auth.login(email, password)
-      .then((data) => {
+      .then(data => {
       if (data.token) {
+        console.log(data.token);
         setEmail(email);
         handleUserLogged();
         localStorage.setItem('token', data.token);
         history.push('/');
       }
     })
-    .catch((err) => {
-      handleInfoTooltip(false);
+    .catch(err => {
+      handleInfoTooltip(true);
       console.log(err);
-    })
+    });
+  }
+
+  function handleSignOut() {
+    setLoggedIn(false);
+    setEmail(null);
+    localStorage.removeItem('token');
+    history.push('/sign-in');
   }
 
   function handleUpdateUser(newUserData) {
     setDataStored(true);
     api.updateUserInfo(newUserData)
-      .then((data) => {
+      .then(data => {
         setCurrentUser(data);
         closeAllPopups();
       })
-      .catch((err) => {
+      .catch(err => {
         console.log(err);
       })
       .finally(() => {
@@ -156,11 +164,11 @@ function App() {
   function handleUpdateAvatar(newAvatarLink) {
     setDataStored(true);
     api.changeAvatar(newAvatarLink)
-      .then((data) => {
+      .then(data => {
         setCurrentUser({ ...currentUser, avatar: data.avatar });
         closeAllPopups();
       })
-      .catch((err) => {
+      .catch(err => {
         console.log(err);
       })
       .finally(() => {
@@ -171,11 +179,11 @@ function App() {
   function handleAddNewCard(cardData) {
     setDataStored(true);
     api.postNewCard(cardData)
-      .then((newCard) => {
+      .then(newCard => {
         setCards([newCard, ...cards]);
         closeAllPopups();
       })
-      .catch((err) => {
+      .catch(err => {
         console.log(err);
       })
       .finally(() => {
@@ -185,25 +193,34 @@ function App() {
 
   function handleCardLike(card) {
     const isLiked = card.likes.some(i => i._id === currentUser._id);
-    api.checkLikeStatus(card._id, !isLiked)
-      .then((newCard) => {
-        const newCards = cards.map((c) => c._id === card._id ? newCard : c);
-        setCards(newCards);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    if(!isLiked) {
+      api.addLike(card._id)
+        .then(newCard => {
+          setCards(state => state.map(c => (c._id === card._id ? newCard : c)));
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    } else {
+      api.deleteLike(card._id)
+        .then(newCard => {
+          setCards(state => state.map((c) => (c._id === card._id ? newCard : c)));
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
   }
 
   function handleCardDelete(card) {
     setDataStored(true);
     api.deleteCard(card._id)
       .then(() => {
-        const newCards = cards.filter((c) => c._id === card._id ? false : true);
+        const newCards = cards.filter(c => c._id === card._id ? false : true);
         setCards(newCards);
         closeAllPopups();
       })
-      .catch((err) => {
+      .catch(err => {
         console.log(err);
       })
       .finally(() => {
@@ -215,11 +232,11 @@ function App() {
     <CurrentUserContext.Provider value={currentUser}>
     <div className="page">
 
-      <Header email={email} />
+      <Header email={email} onSignOut={ handleSignOut } />
 
       <Switch>
         <ProtectedRoute exact path="/" 
-          loggedin={userLogged} 
+          loggedIn={loggedIn} 
           component={Main} 
           onEditAvatar={ handleEditAvatarPopupOpen }
           onEditProfile={ handleEditProfilePopupOpen } 

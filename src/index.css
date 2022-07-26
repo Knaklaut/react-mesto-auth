@@ -3,10 +3,17 @@
 @import url(./blocks/page/page.css);
 
 @import url(./blocks/header/header.css);
+@import url(./blocks/header/__container/header__container.css);
+@import url(./blocks/header/__container/_menu/header__container_menu.css);
 @import url(./blocks/header/__logo/header__logo.css);
+@import url(./blocks/header/__logo/_menu/header__logo_menu.css);
 @import url(./blocks/header/__email/header__email.css);
 @import url(./blocks/header/__link/header__link.css);
+@import url(./blocks/header/__sign-out/header__sign-out.css);
+@import url(./blocks/header/__button/header__button.css);
+@import url(./blocks/header/__button/_close/header__button_close.css);
 @import url(./blocks/header/__reg-data/header__reg-data.css);
+@import url(./blocks/header/__reg-data/_menu/header__reg-data_menu.css);
 
 @import url(./blocks/opening/opening.css);
 @import url(./blocks/opening/__container/opening__container.css);
@@ -14,6 +21,7 @@
 @import url(./blocks/opening/__input/opening__input.css);
 @import url(./blocks/opening/__submit-btn/opening__submit-btn.css);
 @import url(./blocks/opening/__title/opening__title.css);
+@import url(./blocks/opening/__caption/opening__caption.css);
 @import url(./blocks/opening/__link/opening__link.css);
 
 @import url(./blocks/profile/profile.css);

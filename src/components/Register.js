@@ -26,7 +26,7 @@ function Register({ onRegister }) {
                     <input className="opening__input" name="login" type="email" placeholder="Email" value={email} onChange={ handleSetEmail } required />
                     <input className="opening__input" name="password" type="password" placeholder="Пароль" value={password} onChange={ handleSetPassword } required />
                     <button className="opening__submit-btn" type="submit">Зарегистрироваться</button>
-                    <p className="opening__text">Уже зарегистрированы? <Link to='sign-in' className="opening__link">Войти</Link></p>
+                    <p className="opening__caption">Уже зарегистрированы? <Link to='sign-in' className="opening__link">Войти</Link></p>
                 </form>
             </div>
         </section>

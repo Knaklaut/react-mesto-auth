@@ -3,13 +3,14 @@
     font-weight: 400;
     line-height: 1.2;
     text-decoration: none;
+    align-self: center;
     color: #fff;
     transition: opacity .4s ease-in-out;
 }
 
 .header__link:hover {
-    opacity: .6;
     cursor: pointer;
+    opacity: .6;
 }
 
 @media screen and (max-width: 890px) {
