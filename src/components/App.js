@@ -32,6 +32,16 @@ function App() {
   const [dataStored, setDataStored] = useState(false);
 
   useEffect(() => {
+    const token = localStorage.getItem('token');
+      auth.getUserToken(token)
+        .then(() => {
+          setLoggedIn(true);
+          api.setToken(token);
+        })
+        .catch(err => console.log(err));
+  }, []);
+  
+  useEffect(() => {
     api.getUserInfo()
       .then(data => {
         setCurrentUser(data);
@@ -126,7 +136,6 @@ function App() {
     auth.login(email, password)
       .then(data => {
       if (data.token) {
-        console.log(data.token);
         setEmail(email);
         handleUserLogged();
         localStorage.setItem('token', data.token);
@@ -193,19 +202,20 @@ function App() {
 
   function handleCardLike(card) {
     const isLiked = card.likes.some(i => i._id === currentUser._id);
-    if(!isLiked) {
+    function handleNewCardLike (newCard) {
+      const newCards = cards.map((c) => c._id === card._id ? newCard : c);
+      setCards(newCards);
+    }
+    
+    if (!isLiked) {
       api.addLike(card._id)
-        .then(newCard => {
-          setCards(state => state.map(c => (c._id === card._id ? newCard : c)));
-        })
+        .then(handleNewCardLike)
         .catch(err => {
           console.log(err);
         });
     } else {
       api.deleteLike(card._id)
-        .then(newCard => {
-          setCards(state => state.map((c) => (c._id === card._id ? newCard : c)));
-        })
+        .then(handleNewCardLike)
         .catch(err => {
           console.log(err);
         });
@@ -248,11 +258,11 @@ function App() {
         />
 
         <Route path="/sign-in">
-          <Login onLogin={ handleUserLogin } />
+          <Login loggedIn={loggedIn} onLogin={ handleUserLogin } />
         </Route>
 
         <Route path="/sign-up">
-          <Register onRegister={ handleUserRegister } />
+          <Register loggedIn={loggedIn} onRegister={ handleUserRegister } />
         </Route>
       </Switch>
       

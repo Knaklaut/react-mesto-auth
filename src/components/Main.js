@@ -25,8 +25,8 @@ function Main(props) {
 
             <section className="photobook">
                 <ul className="photobook__elements">
-                    {props.cards.map((el) => (
-                        <Card key={el['_id']} card={el} onCardSelect={props.onCardSelect} onCardLike={props.onCardLike} onCardDelete={props.onDeleteCard} />)
+                    {props.cards.map((card) => (
+                        <Card key={card._id} card={card} onCardSelect={props.onCardSelect} onCardLike={props.onCardLike} onCardDelete={props.onDeleteCard} />)
                     )}
                 </ul>
             </section>

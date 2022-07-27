@@ -15,6 +15,10 @@ class Api {
     return Promise.reject(`Ошибка: ${res.status}`)
   }
 
+  setToken(token) {
+    this._headers.authorization = `Bearer ${token}`;
+  }
+
   getUserInfo() {
     return fetch(this._userUrl, {
       headers: {
@@ -72,7 +76,10 @@ class Api {
   addLike(cardId) {
     return fetch(`${this._likesUrl}/${cardId}`, {
       method: 'PUT',
-      headers: this._headers
+      headers: {
+        authorization: this._token,
+        'Content-Type': 'application/json'
+      },
     })
     .then(this._checkServerData);
   }
@@ -80,7 +87,10 @@ class Api {
   deleteLike(cardId) {
     return fetch(`${this._likesUrl}/${cardId}`, {
       method: 'DELETE',
-      headers: this._headers
+      headers: {
+        authorization: this._token,
+        'Content-Type': 'application/json'
+      },
     })
     .then(this._checkServerData);
   }
